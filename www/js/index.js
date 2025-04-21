@@ -1,85 +1,99 @@
-document.addEventListener('deviceready', onDeviceReady, false);
-
+let currentPage = 1;
+let currentQuery = '';
 let isLoading = false;
-let getFilmes = [];
+let totalPages = null;
 
 document.addEventListener('DOMContentLoaded', () => {
-    $("#formSearch").on('submit', async (e) => {  
-        e.preventDefault();
-        $("#searchInput").blur(); 
-        // if (e.key === "Enter") {
-        //     e.preventDefault(); // evita o envio do form, se não quiser isso
-        //     $(this).blur(); // tira o foco do input → fecha o teclado
-        //   }
+  $('#formSearch').on('submit', async (e) => {
+    e.preventDefault();
+    $("#searchInput").blur();
 
-        if ($("#searchInput").val().trim() === "") {
-            return alert("Favor digitar o nome do filme")
-        }
+    if (e.key === "Enter") {
+      e.preventDefault();
+      $(this).blur()
+    }
 
-        const filmes = await buscarFilmes($("#searchInput").val().trim());
-        $("#listMovies").empty();
+    currentQuery = $('#searchInput').val().trim();
+    if (!currentQuery) return alert('Digite o nome de um filme');
 
-        if (filmes.length > 0) {
-            filmes.map((filme) => {
+    currentPage = 1;
+    totalPages = null;
+    $('#listMovies').empty();
+    await carregarFilmes();
+  });
 
-                $("#listMovies").append(`
-                   <div class="card" style="width: 18rem;">
-                   ${filme.poster_path == '' 
-                        ? '<span class="badge badge-danger">Imagem não disponível</span>' 
-                        : `<img src="https://image.tmdb.org/t/p/w500${filme.poster_path}" class="card-img-top" alt="...">`
-                    }                
-                    <div class="card-body">
-                        <h5 class="card-title">${filme.title}</h5>
-                        <p class="card-text">${filme.overview}</p>
-                    </div>
-                    </div>
-                `)
-            })
-        } else {
-            $("#listMovies").append(`
-                <div class="position-absolute w-100 h-100 d-flex align-items-center justify-content-center">
-                    <div style="width:80px; height:80px" class="spinner-border text-primary border-5" role="status">
-                        <span class="visually-hidden">Aguarde...</span>
-                    </div>
-                </div>
-            `);
-        }
+  window.addEventListener('scroll', async () => {
+    window.scrollY > 60 ? [
+      $(".search-container").addClass('active'),
+      $(".search-title").removeClass('text-black').addClass('text-white')
+    ] : [
+      $(".search-container").removeClass('active'),
+      $(".search-title").removeClass('text-white').addClass('text-black')
+
+    ]
+    if (isLoading || !currentQuery) return;
+    if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 300) {
+      if (totalPages && currentPage > totalPages) return;
+      await carregarFilmes();
+    }
+  });
+});
+
+async function carregarFilmes() {
+  isLoading = true;
+  $('#loading').show();
+
+  try {
+    const response = await axios.get('https://api.themoviedb.org/3/search/movie', {
+      params: {
+        api_key: '1a9847701b3189a90811732014ae8a9c',
+        responseType: 'blob',
+        query: currentQuery,
+        page: currentPage,
+        language: 'pt-BR',
+      },
+    });
+
+    const filmes = response.data.results;
+    totalPages = response.data.total_pages;
+
+    if (filmes.length > 0) {
+      filmes.forEach((filme) => {
+        const imagem = filme.poster_path
+          ? `https://image.tmdb.org/t/p/w500${filme.poster_path}`
+          : null;
+
+        $('#listMovies').append(`
+          <div class="col-6 col-md-3 mb-4 d-flex">
+            <div class="card flex-fill">
+              ${imagem
+            ? `<img src="${imagem}" class="card-img-top" alt="${wordLimits(filme.title, 20)}">`
+            : `<div class="bg-secondary text-white d-flex align-items-center justify-content-center" style="height: 300px;">Sem imagem</div>`
+          }
+              <div class="card-body">
+                <h5 class="card-title">${filme.title}</h5>
+                <p class="card-text">${wordLimits(filme.overview, 40) || 'Sem descrição.'}</p>
+              </div>
+            </div>
+          </div>
+        `);
+      });
+    } else {
+      $('#listMovies').append(`<span class="d-flex flex-column align-items-center justify-content-center z-2">Não foi encontrado nenhum filme pelo nome:&nbsp<b> ${currentQuery}</b></span>`)
+    }
 
 
 
-
-
-
-
-
-    })
-})
-
-function onDeviceReady() {
-    // Cordova is now initialized. Have fun!
-
-    console.log('Running cordova-' + cordova.platformId + '@' + cordova.version);
-    document.getElementById('deviceready').classList.add('ready');
+    currentPage++;
+  } catch (error) {
+    console.error('Erro ao carregar filmes:', error);
+  } finally {
+    isLoading = false;
+    $('#loading').hide();
+  }
 }
 
-const buscarFilmes = async (valor) => {
-
-    isLoading = true;
-
-    try {
-        const response = await axios.get("https://api.themoviedb.org/3/search/movie", {
-            params: {
-                api_key: '1a9847701b3189a90811732014ae8a9c',
-                query: valor
-            }
-        });
-
-        return response.data.results;
-
-    } catch (error) {
-        console.error("Erro ao buscar Filmes:", error)
-    } finally {
-        isLoading = false;
-        $("#searchInput").val('')
-    }
+function wordLimits(texto, limite) {
+  textoTemp = texto.trim().split("");
+  return textoTemp.length > limite ? textoTemp.slice(0, limite).join("") + "..." : texto
 }

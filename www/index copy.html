@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="utf-8">
+
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;"> -->
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: *"> -->
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src * 'self' data: blob: gap: https://* http://* 'unsafe-inline' 'unsafe-eval'; img-src * data: blob: content:;">
+
+
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
+    <meta name="color-scheme" content="light dark">
+    <link rel="stylesheet" href="./libs/remix-icons/fonts/remixicon.css">
+    <link rel="stylesheet" href="css/index.css">
+    <title>App Buscar Filmes</title>
+</head>
+
+<body>
+    <div class="app">
+        <div class="form-container">
+            <h1 class="w-100 fs-5 d-flex align-items-center justify-content-center">Buscador de Filmes</h1>
+            <form id="formSearch" action="post" class="form-search">
+                <div class="row">
+                    <div class="col">
+                        <div class="search-container">
+                            <input id="searchInput" placeholder="Digite o nome do filme..."
+                                class="search-input form-control rounded-pill" type="text" enterkeyhint="search">
+                            <button type="submit" class="search-btn btn btn-sm btn-danger rounded-pill"><i
+                                    class="ri-search-line fs-3"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="continer">
+            <div id="listMovies" class="row list-movies">
+
+            </div>
+        </div>
+    </div>
+    <script src="cordova.js"></script>
+    <script src="./assets/jquery/jquery-3.7.1.js"></script>
+    <script src="./assets/bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="./libs/axios/axios.min.js"></script>
+    <script src="js/index.js"></script>
+</body>
+
+</html>

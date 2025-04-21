@@ -7,6 +7,8 @@
 
     <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;"> -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: *">
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src * 'self' data: blob: gap: https://* http://* 'unsafe-inline' 'unsafe-eval'; img-src * data: blob: content:;"> -->
+
 
     <meta name="format-detection" content="telephone=no">
     <meta name="msapplication-tap-highlight" content="no">
@@ -18,25 +20,25 @@
 </head>
 
 <body>
-    <div class="app">     
-        <div class="form-container">
-            <h1 class="w-100 fs-5 d-flex align-items-center justify-content-center">Buscador de Filmes</h1>
-            <form id="formSearch" action="post" class="form-search">
-                <div class="row">
-                    <div class="col">
-                        <div class="search-container">
-                            <input id="searchInput" placeholder="Digite o nome do filme..."
-                                class="search-input form-control rounded-pill" type="text" enterkeyhint="search">
-                            <button type="submit" class="search-btn btn btn-sm btn-danger rounded-pill"><i
-                                    class="ri-search-line fs-3"></i></button>
-                        </div>
-                    </div>
-                </div>
+    <div class="overlay"></div>
+    <div class="app">
+        <div class="search-container container p-2 position-fixed top-0 z-1">
+            <h5 class="search-title text-black row align-items-center justify-content-center">Buscador de Filmes</h5>
+            <form id="formSearch" action="post" class="mb-4 d-flex flex-row position-relative align-items-center">
+                <input type="text" class=" search-input form-control rounded-pill pe-5" id="searchInput"
+                    placeholder="Buscar filme..." enterkeyhint="search"/>
+                <button class="search-btn btn btn-primary rounded-pill shadow-lg position-absolute end-0 fs-5" type="submit"><i
+                        class="ri-search-line"></i></button>
             </form>
         </div>
-
-        <div id="listMovies" class="scrooling">           
+        <div class="container">
+            <div class="list-movies row" id="listMovies"></div>
+            <div id="loading" class="text-center my-4" style="display: none;">
+                <div class="spinner-border text-primary"></div>
+            </div>
         </div>
+
+
     </div>
     <script src="cordova.js"></script>
     <script src="./assets/jquery/jquery-3.7.1.js"></script>

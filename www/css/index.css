@@ -11,35 +11,34 @@ html,body{
     background-color: #fff;
 }
 
-.app{
+.app{   
     width: 100vw;
     height: 100vh;
-    padding: 10px;
 }
-
-.form-container{
-    background: #f1f1f1cc;
+.overlay{
+    background: url('../img/bg-fundo.jpg') no-repeat;
+    background-position: top center;
+    background-size: cover;
+    width: 100vw;
+    height: 100vh;
     position: fixed;
-    top: 0;
+    top: 0;   
     left: 0;
-    margin: 0 auto;
-    width: 100%;
-    box-sizing: border-box;
-    border: none;
-    border-bottom: 1px solid #dedede;
-    z-index: 1;
-    padding: 10px;
-    padding-bottom: 30px;
-   
+    overflow: hidden; 
 }
 
+.overlay img{
+    object-fit: contain;
+    object-position: center;
+}
 .search-container{
-    min-width: 100%;
-    height: 50px;
-    flex-direction: row;
-    position: relative;
-    display: flex;
-    align-items: center;
+    background: #ffffffa9;
+    height: 130px;
+    transition: ease-in .2s;
+}
+
+.search-container.active{
+    background: #000000c7;
 }
 
 .search-input{
@@ -52,30 +51,34 @@ html,body{
 .search-btn{
     position: absolute;
     right: 0;
-    background: red;
     width: 50px;
     height: 50px;
 }
 
-.scrooling{
-    margin-top: 120px;
-    overflow-x: hidden;
-    padding: 5px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 10px;
-    padding: 10px;
+.list-movies{
+    margin-top: 130px;
+    padding-top: 20px;
 }
 
 .card {
     flex: 0 0 calc(50% - 10px); /* 2 por linha com espaço entre */
     box-sizing: border-box;
     margin-bottom: 10px;
+    box-shadow: 0px 0px 12px 6px #000000a4; 
+    border: none;   
+}
+
+.card::after{
+    content: "";
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    border-radius: 5px;
+    box-shadow: inset 0px 0px 8px 2px #000000a4;
 }
 
 @media (max-width: 600px) {
-.card {
-    flex: 0 0 100%; /* Em telas pequenas, 1 por linha */
-}
+    .card {
+        flex: 0 0 calc(45% - 5px); /* Em telas pequenas, 1 por linha */
+    }
 }
